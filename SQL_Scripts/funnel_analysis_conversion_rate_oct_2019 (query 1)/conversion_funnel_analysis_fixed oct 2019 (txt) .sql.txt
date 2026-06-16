@@ -1,0 +1,121 @@
+-- ==============================================================================-- ==============================================================================
+-- Project: Ecommerce Behavioral Analysis (October 2019)
+-- Script: 1_conversion_funnel_fixed.sql
+-- Objective: Analyze user conversion funnel and investigate checkout shortcuts
+-- Database: SQLite
+-- ==============================================================================
+
+-- ------------------------------------------------------------------------------
+-- PART A: Deep Dive / Investigation Query (Proving the Anomaly)
+-- Objective: Understand why unique buyers exceeded unique cart additions.
+-- ------------------------------------------------------------------------------
+/*
+WITH user_behavior AS (
+    SELECT 
+        user_id,
+        MAX(CASE WHEN event_type = 'view' THEN 1 ELSE 0 END) AS saw_product,
+        MAX(CASE WHEN event_type = 'cart' THEN 1 ELSE 0 END) AS added_to_cart,
+        MAX(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) AS bought_product
+    FROM 
+        ecommerce_events
+    WHERE 
+        event_time BETWEEN '2019-10-01' AND '2019-10-07'
+    GROUP BY 
+        user_id
+)
+SELECT 
+    COUNT(CASE WHEN added_to_cart = 1 AND bought_product = 1 THEN 1 END) AS standard_funnel_buyers,
+    COUNT(CASE WHEN added_to_cart = 0 AND bought_product = 1 THEN 1 END) AS skipped_cart_buyers,
+    COUNT(CASE WHEN saw_product = 0 AND bought_product = 1 THEN 1 END) AS ghost_buyers
+FROM 
+    user_behavior;
+*/
+
+
+-- ------------------------------------------------------------------------------
+-- PART B: Optimized & Corrected Funnel (User Flow Analysis)
+-- Objective: Calculate accurate user-level conversion metrics, accounting for 
+-- express checkout user behavior that bypasses the cart stage.
+-- ------------------------------------------------------------------------------
+
+WITH user_flow AS (
+    SELECT 
+        user_id,
+        MAX(CASE WHEN event_type = 'view' THEN 1 ELSE 0 END) AS hit_view,
+        MAX(CASE WHEN event_type = 'cart' THEN 1 ELSE 0 END) AS hit_cart,
+        MAX(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) AS hit_purchase
+    FROM 
+        ecommerce_events
+    WHERE 
+        event_time BETWEEN '2019-10-01' AND '2019-10-07' -- Weekly filter for performance optimization
+    GROUP BY 
+        user_id
+)
+SELECT 
+    COUNT(user_id) AS total_unique_users,
+    SUM(hit_view) AS total_viewers,
+    SUM(hit_cart) AS total_carters,
+    SUM(hit_purchase) AS total_buyers,
+    
+    -- Exact conversion rates (Multiplying by 1.0 prevents integer division truncation in SQLite)
+    ROUND((SUM(hit_cart) * 1.0 / SUM(hit_view)) * 100, 2) AS view_to_cart_rate,
+    ROUND((SUM(hit_purchase) * 1.0 / SUM(hit_view)) * 100, 2) AS overall_conversion_rate
+FROM 
+    user_flow;
+
+================================================================================
+PROJECT: E-commerce Consumer Behavior Analysis (October 2019 Dataset)
+SUBJECT: Executive Summary - Funnel Analysis & UX Anomaly Resolution
+SOURCE:  SQLite Database (Representative Sample: Week 1, October 2019)
+================================================================================
+
+Executive Summary:
+------------------
+Initial aggregate funnel calculations revealed a critical UX anomaly: the cart-to-purchase 
+conversion rate stood at an impossible 110.6% (more buyers than cart additions). 
+An analytical Deep Dive at the unique user level successfully resolved the anomaly. The investigation 
+proved that the platform operates two parallel checkout tracks: a traditional linear funnel, 
+and a highly dominant "Express Checkout" (Buy Now) behavior that completely bypasses the cart stage.
+
+----------------------------------------------------------------================
+1. Aggregate Volume Traffic (Weekly Activity)
+================================================================================
+* Total Unique Users:         851,711
+* Unique Product Viewers:     851,664
+* Unique Cart Additions:       71,133
+* Unique Product Buyers:       78,674
+
+----------------------------------------------------------------================
+2. Behavioral Segmentation & Anomaly Resolution
+================================================================================
+* Standard Funnel Buyers: 40,781 users
+  <- Users who completed the traditional linear path: View ➔ Cart ➔ Purchase.
+
+* Skipped Cart / Express Buyers: 37,893 users
+  <- Users who bypassed the cart entirely and purchased directly from the product page 
+     (accounting for ~48.1% of all successful buyers!).
+
+* Ghost Buyers: 32 users
+  <- Outlier cases where a purchase occurred without a preceding view event 
+     (statistically negligible, validating overall tracking integrity).
+
+----------------------------------------------------------------================
+3. Corrected Key Performance Indicators (KPIs)
+================================================================================
+* View-to-Cart Rate: 8.35%
+  <- Measures standard user product engagement and initial intent.
+
+* Overall Conversion Rate: 9.24%
+  <- Calculated as total unique buyers divided by total unique viewers.
+
+----------------------------------------------------------------================
+Product & Business Insights:
+================================================================================
+1. Express Checkout Dominance: Nearly half of all buying customers opt for the direct purchase 
+   mechanism. While this frictionless channel drastically accelerates the Time-to-Purchase, 
+   it strips the business of high-value cross-selling and up-selling opportunities typically 
+   leveraged within a dedicated shopping cart environment.
+2. Redefining Funnel Architecture: Standard, rigid linear funnel models heavily distort the 
+   operational reality of this platform. Moving forward, product strategy teams must analyze 
+   and track the two checkout streams as completely independent funnels to prevent skewed ROI 
+   and conversion reporting.
