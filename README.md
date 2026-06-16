@@ -2,7 +2,7 @@
 
 # 🛒 eCommerce User Behavior & Cohort Analytics
 
-## 🎯 Business Case & Objective
+##  Business Case & Objective
 An e-commerce multi-category platform experienced a noticeable drop in overall conversion rates and a decline in customer retention over recent quarters. Despite high traffic volumes, user engagement within the shopping funnel was suboptimal, leading to lost revenue opportunities.
 
 The objective of this project is to analyze raw, large-scale clickstream data to map the user journey, identify behavioral friction points (specifically cart abandonment), perform cohort analysis to measure long-term user retention, and deliver data-driven, actionable recommendations to product and UX teams.
