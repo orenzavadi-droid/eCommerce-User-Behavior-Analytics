@@ -1,8 +1,8 @@
-🛒 eCommerce User Behavior & Cohort Analytics
-Business Case & Objective
-An e-commerce multi-category platform experienced a noticeable drop in overall conversion rates and a decline in customer retention over recent quarters. Despite high traffic volumes, user engagement within the shopping funnel was suboptimal, leading to lost revenue opportunities.
+🛒 eCommerce User Behavior & Conversion Analytics
+💼 Business Case & Objective
+An e-commerce multi-category platform experienced a noticeable drop in overall conversion rates and a decline in customer metrics over recent quarters. Despite high traffic volumes, user engagement within the shopping funnel was suboptimal, leading to lost revenue opportunities.
 
-The objective of this project is to analyze raw, large-scale clickstream data (42+ million rows) to map the user journey, diagnose behavioral friction points, perform cohort analysis to measure long-term user retention, and deliver data-driven, actionable recommendations to product and UX teams.
+The objective of this project is to analyze raw, large-scale clickstream data (42+ million rows) to map the user journey, diagnose behavioral friction points (specifically cart abandonment), and deliver data-driven, actionable recommendations to product and UX teams using an interactive executive dashboard.
 
 📊 About the Dataset
 Source: REES46 eCommerce behavior data (Multi-Category Store Dataset).
@@ -12,13 +12,11 @@ Scale: Real-world clickstream data capturing over 42,448,764 user events (view, 
 Key Attributes Analyzed: event_time, event_type, product_id, category_id, price, user_id, and user_session.
 
 🛠️ Tech Stack & Methodology
-SQLite (Stand-in for Data Agility): Utilized for local architecture, quick data ingestion via command-line piping, and high-performance querying on 42M+ rows directly inside the local workspace.
+SQLite (Data Agility Pivot): Utilized for local architecture, quick data ingestion via command-line piping, and high-performance querying on 42M+ rows directly inside the local workspace.
 
 SQL: Used for heavy lifting, user-flow segmentation, conditional aggregations, and calculating funnel conversion metrics.
 
-R (tidyverse, ggplot2): Utilized for advanced statistical analysis, behavioral segmentation, and building monthly cohort retention matrices.
-
-Tableau: Developed an interactive, stakeholder-facing dashboard tracking core product KPIs.
+Tableau: Used to develop an interactive, stakeholder-facing executive dashboard tracking core product KPIs, funnel behaviors, and revenue leakages.
 
 🔍 Key Analytical Steps & Scripts
 1. Data Ingestion & Architectural Pivot (Technical Retro)
@@ -54,17 +52,10 @@ Key Category Matrix Findings:
 
 "Severe Roadblock" (Category ...0485): Suffered the worst performance in the dataset with an 85.71% abandonment rate on mid-to-high tier products ($146.27 avg price), indicating potential page errors or high competitive friction.
 
-4. User Cohort & Retention Analysis (R)
-Script Location: /R_Scripts/cohort_retention.R
-
-Objective: Grouped users into cohorts based on their first purchase month and tracked their repeat-purchase rate over a 6-month period.
-
-Key Finding: [To be updated with your actual R data later, e.g., Retention drops sharply by Month 2...]
-
 📈 Executive Dashboard (Tableau)
-The results of this analysis were translated into an interactive executive dashboard.
+The results of this analysis were translated into an interactive executive dashboard designed for product managers and stakeholders.
 
-Monitored Product KPIs: Conversion Rate (CR), Average Order Value (AOV), Cart Abandonment Rate (CAR), and Cohort Retention Performance.
+Monitored Product KPIs: Conversion Rate (CR), Average Order Value (AOV), Cart Abandonment Rate (CAR), and Category Leakage.
 
 🔗 [Click Here to View the Live Tableau Dashboard] (Insert your Tableau Public link here later)
 
@@ -76,3 +67,4 @@ Redefine Dashboard Funnel Architecture: Product management teams must immediatel
 Automated Retargeting Triggers for High-Ticket B2C: Implement an automated, behavior-triggered cart-abandonment email system timed exactly 30 minutes post-exit for products over $300 (Categories ...0549 / ...3671). Incorporating warranty info or a limited 5% incentive will ease checkout anxiety.
 
 Overcome Shipping Friction on Impulse Items: For high-volume, low-cost categories like ...7671, deploy dynamic checkout banner alerts (e.g., "Add just $15 more to unlock Free Shipping!") to convert impulse cart additions into completed transactions before shipping fees cause drop-offs.
+
