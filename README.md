@@ -1,4 +1,5 @@
 🛒 eCommerce User Behavior & Conversion Analytics
+
 💼 Business Case & Objective
 An e-commerce multi-category platform experienced a noticeable drop in overall conversion rates and a decline in customer metrics over recent quarters. Despite high traffic volumes, user engagement within the shopping funnel was suboptimal, leading to lost revenue opportunities.
 
@@ -68,3 +69,4 @@ Automated Retargeting Triggers for High-Ticket B2C: Implement an automated, beha
 
 Overcome Shipping Friction on Impulse Items: For high-volume, low-cost categories like ...7671, deploy dynamic checkout banner alerts (e.g., "Add just $15 more to unlock Free Shipping!") to convert impulse cart additions into completed transactions before shipping fees cause drop-offs.
 
+💾 מה עושים עכשיו?
